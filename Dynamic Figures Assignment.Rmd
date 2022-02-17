@@ -1,0 +1,79 @@
+---
+title: "STAA 566 Dynamic Figures"
+author: "Grace Entwistle"
+date: "2/16/2022"
+output: html_document
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE}
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(plotly)
+##read in data
+disasters <- read.csv("C:/Users/grace/OneDrive/Documents/MSStats/STAA566/World Disaster Data 1960-2018.csv")
+
+#summarize data for graphic
+by.disaster <- disasters %>% 
+  group_by(disastertype, year ) %>% 
+  summarise("TotalNum" = n())
+
+#pivotting data because plotly likes wide data not long data
+by.disaster.wide <- pivot_wider(by.disaster, names_from = disastertype, values_from = TotalNum)
+by.disaster.wide$year <- as.Date(as.character(by.disaster.wide$year),format = "%Y")
+by.disaster.wide$year <- year(by.disaster.wide$year)
+```
+
+
+```{r}
+#base plot
+p_f_s <- plot_ly(by.disaster.wide, x = ~year) %>% 
+    add_lines(y = ~flood, name = "Floods") %>% 
+    add_lines(y = ~storm, name = "Storms")
+
+
+#formtting the plot
+p_fs <- p_f_s %>% 
+  rangeslider() %>% 
+  layout(hovermode = "x",
+    title = "Number of Floods and Storms Across the World from 1960 to 2018",
+         xaxis = list(title = NA),
+         yaxis = list(title = "Total Number"))
+
+# adding buttons
+p_fs <- p_fs %>% 
+  layout(
+    title=NA,
+    xaxis = list(
+      rangeselector = list(
+        buttons = list(
+          list(
+            count = 5,
+            label = "5 yrs",
+            step = "year",
+            stepmode = "backward"),
+          list(
+            count = 10,
+            label = "10 yrs",
+            step = "year",
+            stepmode = "backward"),
+          list(
+            count = 20,
+            label = "20 yrs",
+            step = "year",
+            stepmode = "backward"),
+          list(step = "all"))),
+      rangeslider = list(type = "date")))
+p_fs
+
+  
+```
