@@ -32,7 +32,11 @@ by.disaster.wide <- pivot_wider(by.disaster, names_from = disastertype, values_f
 by.disaster.wide$year <- as.Date(as.character(by.disaster.wide$year),format = "%Y")
 by.disaster.wide$year <- year(by.disaster.wide$year)
 ```
+My data source is NASA's GeoCoded Disaster dataset from 1960 - 2018. It can be found at this URL: *https://sedac.ciesin.columbia.edu/data/set/pend-gdis-1960-2018#:~:text=The%20Geocoded%20Disasters%20(GDIS)%20Dataset,the%20years%201960%20to%202018.*
 
+I have volunteered for disaster relief in the past, and am very interested in the rise of natural disasters that have occurred recently. My dataset includes natural disasters that occurred across 200 countries from 1960 to 2018. In my plot below, I specifically look at flood and storm counts across all countries to see how the counts of each floods compare to reported storms. I had assumed that there would be more storms than floods, because storms lead to floods, but not all storms cause floods. However, as you can see in the chart below, there are more floods than storms in many years.
+
+The chart has separate lines for flood and storm data, and I updated the hover default, so the viewer can see the number of storms and floods for a given year all at once. Additionally, I added an explanatory title, updated the y axis, and removed the x axis for simplicity. I also added a slider to look at smaller ranges of years, as well as buttons to the top of the graph so the viewer can zoom in and specifically look at the last 5, 10, 20 years just by clicking a button versus using the slider at the bottom (from 2018 since that is the latest data we have).
 
 ```{r}
 #base plot
